@@ -16,7 +16,7 @@ deploy:
         name: mv staticfiles
         code: |
           rm -rf /usr/share/nginx/html/*
-          echo "Hallo daar" > /usr/share/nginx/html/index.html
+          cp index.html > /usr/share/nginx/html
     - internal/docker-push:
         tag: $DOCKER_HUB_TAG
         username: $DOCKER_HUB_USERNAME
