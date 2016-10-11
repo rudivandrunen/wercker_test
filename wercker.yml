@@ -16,7 +16,7 @@ deploy:
         name: mv staticfiles
         code: |
           rm -rf /usr/share/nginx/html/*
-          cp index.html > /usr/share/nginx/html
+          cp -Rp $WERCKER_SOURCE_DIR/* > /usr/share/nginx/html
     - internal/docker-push:
         tag: $DOCKER_HUB_TAG
         username: $DOCKER_HUB_USERNAME
