@@ -1,0 +1,42 @@
+box: mickro/nodejs-bower-grunt-sass
+build:
+    steps:
+        - add-ssh-key:
+            keyname: MYPACKAGE_KEY
+        - add-to-known_hosts:
+            hostname: github.com
+            fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+        - script:
+          name: npm install
+          code: |
+            npm install -g gulp
+            npm install
+        - script:
+          name: build production bundle
+          code: |
+            npm run build-production
+        - script:
+          name: system information 
+          code: |
+            echo "node version $(node --version) running"
+            echo "npm version $(npm --version) running"
+            echo "bower version $(bower --version) running"
+            echo "gulp version $(gulp --version) running"
+deploy:
+  box:
+    id: nginx:alpine
+    cmd: /bin/sh
+  steps:
+    - script:
+        name: mv staticfiles
+        code: |
+          rm -rf /usr/share/nginx/html/*
+          cp -Rp $WERCKER_SOURCE_DIR/dist/* /usr/share/nginx/html
+    - internal/docker-push:
+        tag: $DOCKER_HUB_TAG
+        username: $DOCKER_HUB_USERNAME
+        password: $DOCKER_HUB_PASSWORD
+        repository: $DOCKER_HUB_REPO
+        ports: $DOCKER_PORT
+        cmd: nginx -g 'daemon off;'
+        registry:  https://hub.docker.com
