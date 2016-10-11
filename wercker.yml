@@ -7,15 +7,6 @@ build:
             hostname: github.com
             fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
         - script:
-          name: npm install
-          code: |
-            npm install -g gulp
-            npm install
-        - script:
-          name: build production bundle
-          code: |
-            npm run build-production
-        - script:
           name: system information 
           code: |
             echo "node version $(node --version) running"
@@ -31,7 +22,7 @@ deploy:
         name: mv staticfiles
         code: |
           rm -rf /usr/share/nginx/html/*
-          cp -Rp $WERCKER_SOURCE_DIR/dist/* /usr/share/nginx/html
+          echo "Hallo daar" > /usr/share/nginx/html/index.html
     - internal/docker-push:
         tag: $DOCKER_HUB_TAG
         username: $DOCKER_HUB_USERNAME
